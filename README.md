@@ -1,4 +1,1 @@
-## This is sample math code
-## Given a number n, finds the sum of numbers from 1 to n
-!
-Pull Request Example
+## Simple Use Case to Demostrate Jira Integration with GitHub and GitHub integration with VS Code!!!

@@ -83,6 +83,6 @@ jobs:
         id: transition
         uses: atlassian/gajira-transition@master
         with:
-            issue: CM-68
-            transition: "To-Do"
+            issue: CM-69
+            transition: "Done"
 

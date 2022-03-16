@@ -61,9 +61,9 @@ jobs:
             transition: "Done"
             
   transition_failure:
-    if: ${{ always() && contains(join(needs.*.result, ','), 'failure') }}
     needs: [build]
-   
+    if: always() && (needs.build.result == 'failure')
+  
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 

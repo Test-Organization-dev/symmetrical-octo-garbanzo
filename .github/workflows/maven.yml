@@ -27,14 +27,14 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-    - name: Echo Hello World
-      run: echo "Hello world"
+    - name: Echo Success 
+      run: echo "Complilation is done. And its ready to merge with main branch"
     - name: multiple commands
       run: |
-        echo "Hi"
-        echo "Byee"
+        echo "Ready"
+        echo "To Merge"
   
-  transition_success:
+  transition_to_Done:
     if: ${{ always() && contains(join(needs.*.result, ','), 'success') }}
     needs: [build]
    
@@ -60,7 +60,7 @@ jobs:
             issue: CM-68
             transition: "Done"
             
-  transition_failure:
+  transition_to_Open:
     needs: [build]
     if: always() && (needs.build.result == 'failure')
   
@@ -83,6 +83,6 @@ jobs:
         id: transition
         uses: atlassian/gajira-transition@master
         with:
-            issue: CM-69
+            issue: CM-68
             transition: "To Do"
 

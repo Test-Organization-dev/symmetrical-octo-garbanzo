@@ -44,7 +44,7 @@ jobs:
       - name: Create
         uses: atlassian/gajira-create@master
         with: 
-           project: "Demo Project"
+           project: CM
            issuetype: Bug
            summary: |
               github.push.head_commit.message

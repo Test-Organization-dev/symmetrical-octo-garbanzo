@@ -22,21 +22,9 @@ jobs:
         cache: maven
     - name: Build with Maven
       run: mvn -B package --file pom.xml
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-    - name: Echo Success 
-      run: echo "Complilation is done. And its ready to merge with main branch"
-    - name: multiple commands
-      run: |
-        echo "Ready"
-        echo "To Merge"
-  
-  transition_to_Done:
-    if: ${{ always() && contains(join(needs.*.result, ','), 'success') }}
+  create_issue:
     needs: [build]
+    if: always() && (needs.build.result == 'failure')
    
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
@@ -53,36 +41,15 @@ jobs:
           JIRA_USER_EMAIL: ${{ secrets.JIRA_USER_EMAIL }}
           JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
 
-      - name: Transition issue
-        id: transition
-        uses: atlassian/gajira-transition@master
-        with:
-            issue: CM-68
-            transition: "Done"
-            
-  transition_to_Open:
-    needs: [build]
-    if: always() && (needs.build.result == 'failure')
-  
-    # The type of runner that the job will run on
-    runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
-      
-      - name: Login
-        uses: atlassian/gajira-login@master
-        env:
-          JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
-          JIRA_USER_EMAIL: ${{ secrets.JIRA_USER_EMAIL }}
-          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
-
-      - name: Transition issue
-        id: transition
-        uses: atlassian/gajira-transition@master
-        with:
-            issue: CM-68
-            transition: "To Do"
-
+      - name: Create
+        uses: atlassian/gajira-create@master
+        with: 
+           project: "Demo Project"
+           issuetype: Bug
+           summary: |
+              github.push.head_commit.message
+           description: |
+              Compare branch
+           
+      - name: Log created issue
+        run: echo "Issue ${{ steps.create.outputs.issue }} was created"  
